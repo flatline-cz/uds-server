@@ -21,7 +21,8 @@ add_executable(uds-server
         )
 
 target_compile_definitions(uds-server PRIVATE
-#        DIAG_STORAGE_ASYNC
+        DIAG_STORAGE_ASYNC
+        STORAGE_TRACE
         )
 
 target_include_directories(uds-server PRIVATE

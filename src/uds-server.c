@@ -1,25 +1,38 @@
 //
 // Created by tumap on 7/4/22.
 //
-
+#ifdef STORAGE_TRACE
+#include <stdio.h>
+#endif
 #include "diag/ecu.h"
 #include "diag/uds.h"
 
 #ifdef DIAG_STORAGE_ASYNC
-void diag_ecu_storage_query(uint16_t sequenceId) {
-
+void diag_ecu_storage_query(uint16_t sequence_id) {
+#ifdef STORAGE_TRACE
+    fprintf(stderr, "Storage async query: %04X\n", sequence_id);
+#endif
 }
 #else
-bool diag_ecu_storage_query(uint16_t sequenceId, unsigned* length, uint8_t* content) {
-    return false;
+bool diag_ecu_storage_query(uint16_t sequence_id, unsigned* length, uint8_t* content) {
+#ifdef STORAGE_TRACE
+    fprintf(stderr, "Storage async query: %04X\n", sequence_id);
+#endif
 }
 #endif
 
-eDiagStatus diag_uds_get_field_common(unsigned field_id, uint8_t *buffer, unsigned *position, unsigned max_length) {
+void diag_ecu_storage_update(uint16_t sequence_id, unsigned length, const uint8_t* content) {
+    fprintf(stderr, "Storage update: %04X:", sequence_id);
+    for(int i=0;i<length;i++)
+        fprintf(stderr, " %02X", content[i]);
+    fprintf(stderr, "\n");
+}
+
+eDiagStatus diag_uds_get_field_common(unsigned field_id, uint8_t * buffer, unsigned *position, unsigned max_length) {
     return UNKNOWN_FIELD;
 }
 
-void diag_uds_send_response_string(uint32_t field_id, unsigned length, const uint8_t* data) {
+void diag_uds_send_response_string(uint32_t field_id, unsigned length, const uint8_t* const data) {
 
 }
 
@@ -28,6 +41,10 @@ void diag_uds_send_response_number(uint32_t field_id, uint32_t value, unsigned b
 }
 
 void diag_ecu_update_field(uint16_t fieldId, uint32_t value) {
+
+}
+
+void diag_ecu_set_message(const tCANMessage* msg) {
 
 }
 
@@ -40,6 +57,9 @@ int main(int argc, char** argv) {
 
     unsigned pos;
     diag_uds_get_field(0, 0, &pos, 0);
+
+    pos=17;
+    diag_uds_update_field(0, "01234567890123456789", &pos);
 
 
     return 0;
