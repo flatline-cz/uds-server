@@ -11,22 +11,39 @@ include(impl/CMakeLists.txt)
 
 set(SOURCES_COMMON
         src/uds-server.c
+        src/storage-sync.c
         )
+
+set(SOURCES_STORAGE
+        )
+
+if (DEFINED ${STORAGE_CANBUS_ACCESS})
+    list(APPEND SOURCES_STORAGE src/storage-canbus-access.c)
+endif ()
 
 
 add_executable(uds-server
+        test/main.c
+        test/platform-input.c
+        test/platform-output.c
+        test/platform-time.c
         ${SOURCES_COMMON}
+        ${SOURCES_STORAGE}
         ${DASHBOARD_LIB_SOURCES}
         ${DIAGNOSTIC_IMPL_SOURCES}
         )
 
 target_compile_definitions(uds-server PRIVATE
-        DIAG_STORAGE_ASYNC
+#        DIAG_STORAGE_ASYNC
         STORAGE_TRACE
+        EXTERNAL_ISOTP
+        PROTOCOL_DEBUG
+        STORAGE_CANBUS_ACCESS
+        PROJECT_NAME="${CMAKE_PROJECT_NAME}"
         )
 
 target_include_directories(uds-server PRIVATE
-        src
+        include
         ${DASHBOARD_LIB_INCLUDES}
         ${DIAGNOSTIC_IMPL_INCLUDES}
         )

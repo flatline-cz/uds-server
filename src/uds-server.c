@@ -4,6 +4,7 @@
 #ifdef STORAGE_TRACE
 #include <stdio.h>
 #endif
+#include "uds-server.h"
 #include "diag/ecu.h"
 #include "diag/uds.h"
 
@@ -49,18 +50,21 @@ void diag_ecu_set_message(const tCANMessage* msg) {
 }
 
 
-int main(int argc, char** argv) {
+// implemented by FRAMEWORK
+void uds_server_init() {
 
-    tCANMessage msg;
-
-    diag_ecu_message_received(&msg);
-
-    unsigned pos;
-    diag_uds_get_field(0, 0, &pos, 0);
-
-    pos=17;
-    diag_uds_update_field(0, "01234567890123456789", &pos);
-
-
-    return 0;
 }
+
+// implemented by FRAMEWORK
+void uds_server_message_received(const tCANMessage* msg) {
+
+}
+
+
+#ifdef EXTERNAL_ISOTP
+// implemented by FRAMEWORK
+void uds_server_request_received(const uint8_t* data, unsigned length) {
+
+}
+
+#endif
