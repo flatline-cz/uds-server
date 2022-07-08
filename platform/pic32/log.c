@@ -5,6 +5,7 @@
 #include <stdarg.h>
 #include "log.h"
 #include "platform-serial.h"
+#include "platform-timer.h"
 
 #define MAX_LOG_MESSAGE_LENGTH  128
 
@@ -12,11 +13,11 @@ static char buffer[MAX_LOG_MESSAGE_LENGTH+1];
 
 void log_message(const char *source_file, int source_line, const char *msg, ...) {
     int len;
+    
+    len=snprintf(buffer, MAX_LOG_MESSAGE_LENGTH, "% 4d.%03d ", now/1000, now%1000);
     // source file/line
     if (source_file)
-        len=snprintf(buffer, MAX_LOG_MESSAGE_LENGTH, "%s(%d): ", source_file, source_line);
-    else
-        len=0;
+        len+=snprintf(buffer+len, MAX_LOG_MESSAGE_LENGTH-len, "%s(%d): ", source_file, source_line);
 
     // message itself
     va_list args;

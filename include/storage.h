@@ -7,7 +7,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "diag/uds.h"
+#include "uds.h"
 #ifdef STORAGE_CANBUS_ACCESS
 #include "can-bus.h"
 #endif
@@ -27,7 +27,7 @@ eDiagStatus diag_ecu_storage_query(uint16_t sequence_id, unsigned* length, uint8
 eDiagStatus diag_ecu_storage_update(uint16_t sequence_id, unsigned length, const uint8_t* content);
 
 
-#ifndef DIAG_STOTAGE_ASYNC
+#ifndef DIAG_STORAGE_ASYNC
 enum eStorageRecordAccess {
     STORAGE_ACCESS_HIDDEN,
     STORAGE_ACCESS_READ_ONLY,
@@ -38,13 +38,13 @@ typedef enum eStorageRecordAccess eStorageRecordAccess;
 
 struct tStorageRecord {
     unsigned position: 16;
-    unsigned length: 2;
+    unsigned length: 6;
     eStorageRecordAccess access: 2;
 };
 typedef struct tStorageRecord tStorageRecord;
 
 // implemented by IMPLEMENTATION
-extern const tStorageRecord* diag_storage_config_records;
+extern const tStorageRecord diag_storage_config_records[];
 extern const unsigned diag_storage_config_count;
 
 #endif

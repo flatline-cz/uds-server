@@ -18,6 +18,9 @@ void uds_server_message_received(const tCANMessage* msg);
 typedef uint32_t tTime;
 tTime uds_server_get_time();
 
+// implemented by PLATFORM
+void uds_server_send_message(const tCANMessage* msg);
+
 #ifdef EXTERNAL_ISOTP
 // implemented by FRAMEWORK
 void uds_server_request_received(const uint8_t* data, unsigned length);

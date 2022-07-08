@@ -14,6 +14,11 @@ set(SOURCES_COMMON
         src/storage-sync.c
         )
 
+if (DEFINED ${EXTERNAL_ISOTP})
+else()
+    list(APPEND SOURCES_COMMON common/src/iso-tp.c)
+endif ()
+
 set(SOURCES_STORAGE
         )
 
@@ -36,7 +41,7 @@ add_executable(uds-server
 target_compile_definitions(uds-server PRIVATE
 #        DIAG_STORAGE_ASYNC
         STORAGE_TRACE
-        EXTERNAL_ISOTP
+#        EXTERNAL_ISOTP
         PROTOCOL_DEBUG
         STORAGE_CANBUS_ACCESS
         PROJECT_NAME="${CMAKE_PROJECT_NAME}"

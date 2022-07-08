@@ -51,3 +51,6 @@ Module.symvers
 Mkfile.old
 dkms.conf
 /cmake-build-debug/
+/platform/pic32/build/
+/platform/pic32/dist/
+/platform/pic32/.generated_files/

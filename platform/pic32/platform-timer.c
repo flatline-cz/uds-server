@@ -3,11 +3,12 @@
 //
 #include <xc.h>
 #include "uds-server.h"
+#include "platform-timer.h"
 
 tTime now;
 
 
-void timer_init() {
+void platform_timer_init() {
     now=0;
 
     T2CONCLR = _T2CON_ON_MASK;
@@ -19,13 +20,16 @@ void timer_init() {
 }
 
 
-void timer_handle() {
-    // 1ms period ellapsed?
+bool platform_timer_handle() {
+    // 1 millisecond period elapsed?
     if(IFS0bits.T2IF) {
         IFS0bits.T2IF=0;
         now++;
+        return true;
     }
+    return false;
 }
+
 
 tTime uds_server_get_time() {
     return now;
