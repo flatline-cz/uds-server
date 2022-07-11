@@ -2,14 +2,21 @@
 // Created by tumap on 7/4/22.
 //
 #ifdef STORAGE_TRACE
+
 #include <stdio.h>
+
 #endif
+
 #include "framework.h"
+#include "implementation.h"
 #include "platform.h"
 #include "log.h"
+
 #ifndef EXTERNAL_ISOTP
 #include "iso-tp.h"
 #endif
+
+#include "dgi-constants.h"
 
 bool uds_server_idle();
 
@@ -19,7 +26,7 @@ static tISOTPContext isotp_context;
 static uint8_t isotp_rx_buffer[ISOTP_MAX_MESSAGE_LENGTH];
 #endif
 
-eDiagStatus diag_uds_get_field_common(unsigned field_id, uint8_t * buffer, unsigned *position, unsigned max_length) {
+eDiagStatus diag_uds_get_field_common(unsigned field_id, uint8_t *buffer, unsigned *position, unsigned max_length) {
     return UNKNOWN_FIELD;
 }
 
@@ -68,17 +75,32 @@ void uds_server_init() {
 }
 
 bool uds_server_handle() {
-    bool didSomething=false;
+    bool didSomething = false;
 #ifndef EXTERNAL_ISOTP
     didSomething|= isotp_handle(&isotp_context);
 #endif
 
-    didSomething|=uds_server_idle();
+    didSomething |= uds_server_idle();
 
     return didSomething;
 }
 
-void uds_server_message_received(const tCANMessage* msg) {
+#ifdef DIAG_BRIDGE
+static inline void process_bridge_message(const tCANMessage *msg) {
+    unsigned i;
+    for (i = 0; i < DG_BRIDGE_MESSAGE_LIST_COUNT; i++) {
+        if (msg->interface == diag_bridge_message_list[i].interface
+            && msg->id == diag_bridge_message_list[i].id
+            && msg->extended == diag_bridge_message_list[i].extended) {
+            // match -> pass message
+            uds_server_bridge_send_message(msg);
+            return;
+        }
+    }
+}
+#endif
+
+void uds_server_message_received(const tCANMessage *msg) {
     // handle UDS stream
 #ifndef EXTERNAL_ISOTP
     // FIXME: interface configurable
@@ -86,7 +108,10 @@ void uds_server_message_received(const tCANMessage* msg) {
         return;
 #endif
 
-    // TODO: pass to bridge
+#ifdef DIAG_BRIDGE
+    // pass to bridge
+    process_bridge_message(msg);
+#endif
 
 
     // pass to implementation

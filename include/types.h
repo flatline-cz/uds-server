@@ -37,5 +37,14 @@ struct tStorageRecord {
 typedef struct tStorageRecord tStorageRecord;
 #endif
 
+#ifdef DIAG_BRIDGE
+struct tCANMessageId {
+    unsigned interface;
+    uint32_t id;
+    bool extended;
+};
+typedef struct tCANMessageId tCANMessageId;
+#endif
+
 
 #endif //UDS_SERVER_TYPES_H

@@ -5,6 +5,7 @@
 #include <memory.h>
 #include "buffer.h"
 #include "protocol.h"
+#include "platform.h"
 
 static tWriteBuffer write_buffer = {
         .name="Output"
@@ -36,5 +37,17 @@ void uds_server_send_response(const uint8_t* data, unsigned length) {
     response_command.udsRecord.length=length;
     memcpy(response_command.udsRecord.data, data, length);
     protocol_write(&response_command, &write_buffer);
+}
+#endif
+
+
+#ifdef DIAG_STORAGE_ASYNC
+void diag_ecu_storage_query(uint16_t sequence_id) {
+    // TODO:
+}
+
+eDiagStatus diag_ecu_storage_update(uint16_t sequence_id, const uint8_t* content, unsigned length) {
+    // TODO:
+    return OK;
 }
 #endif

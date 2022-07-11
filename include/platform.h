@@ -2,7 +2,7 @@
 // Created by tumap on 7/10/22.
 //
 
-#ifndef UDS_SERVER_PLATFORM_INPUT_OUTPUT_H
+#ifndef UDS_SERVER_PLATFORM_H
 #define UDS_SERVER_PLATFORM_H
 
 #include <stdint.h>
@@ -29,7 +29,11 @@ extern uint8_t diag_storage_content[STORAGE_SIZE];
 extern uint8_t diag_storage_bitmap[STORAGE_BITMAP_SIZE];
 extern bool diag_storage_loaded;
 extern bool diag_storage_changed;
+#endif
 
+#ifdef DIAG_STORAGE_ASYNC
+void diag_ecu_storage_query(uint16_t sequence_id);
+eDiagStatus diag_ecu_storage_update(uint16_t sequence_id, const uint8_t* content, unsigned length);
 #endif
 
 #ifdef EXTERNAL_ISOTP
@@ -37,4 +41,10 @@ extern bool diag_storage_changed;
 void uds_server_send_response(const uint8_t* data, unsigned length);
 #endif
 
-#endif //UDS_SERVER_PLATFORM_INPUT_OUTPUT_H
+#ifdef DIAG_BRIDGE
+void uds_server_bridge_send_message(const tCANMessage* msg);
+void uds_server_bridge_query_storage(uint16_t sequenceId);
+bool uds_server_bridge_storage_response(uint16_t sequenceId, const uint8_t* data, unsigned length);
+#endif
+
+#endif //UDS_SERVER_PLATFORM_H

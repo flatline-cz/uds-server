@@ -27,14 +27,15 @@ void diag_ecu_update_field(uint16_t fieldId, uint32_t value);
 
 #ifdef DIAG_STORAGE_ASYNC
 // implemented by FRAMEWORK
-void diag_ecu_storage_query(uint16_t sequence_id);
+void uds_server_storage_response(uint16_t sequence_id, const uint8_t* content, unsigned length);
 #else
 // implemented by FRAMEWORK
-eDiagStatus diag_ecu_storage_query(uint16_t sequence_id, unsigned* length, uint8_t* content);
+eDiagStatus diag_ecu_storage_query(uint16_t sequence_id, const uint8_t* content, unsigned* length);
+// implemented by FRAMEWORK
+eDiagStatus diag_ecu_storage_update(uint16_t sequence_id, const uint8_t* content, unsigned length);
 #endif
 
-// implemented by FRAMEWORK
-eDiagStatus diag_ecu_storage_update(uint16_t sequence_id, unsigned length, const uint8_t* content);
+
 
 #ifdef STORAGE_CANBUS_ACCESS
 // implemented by FRAMEWORK

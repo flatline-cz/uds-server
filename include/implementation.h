@@ -22,14 +22,17 @@ void diag_ecu_message_received(const tCANMessage* msg);
 
 #ifdef DIAG_STORAGE_ASYNC
 // implemented by IMPLEMENTATION
-void diag_ecu_storage_response(uint16_t sequence_id, unsigned length, uint8_t* content);
+void diag_ecu_storage_response(uint16_t sequence_id, const uint8_t* content, unsigned length);
 #endif
 
 #ifndef DIAG_STORAGE_ASYNC
 // implemented by IMPLEMENTATION
 extern const tStorageRecord diag_storage_config_records[];
 extern const unsigned diag_storage_config_count;
+#endif
 
+#ifdef DIAG_BRIDGE
+extern const tCANMessageId diag_bridge_message_list[];
 #endif
 
 #endif //UDS_SERVER_IMPLEMENTATION_H

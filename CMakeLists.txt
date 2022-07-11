@@ -9,49 +9,32 @@ include(common/CMakeLists.txt)
 include(impl/CMakeLists.txt)
 
 
-set(SOURCES_COMMON
-        src/uds-server.c
-        src/common-responses.c
-        src/uds-processor.c
-        src/storage-sync.c
+set(COMMON_SOURCES
+        src/uds/uds-server.c
+        src/uds/uds-common-responses.c
+        src/uds/uds-processor.c
         )
 
-if (DEFINED ${EXTERNAL_ISOTP})
-else()
-    list(APPEND SOURCES_COMMON common/src/iso-tp.c)
-endif ()
-
-set(SOURCES_STORAGE
+set(STORAGE_SOURCES
         )
 
-if (DEFINED ${STORAGE_CANBUS_ACCESS})
-    list(APPEND SOURCES_STORAGE src/storage-canbus-access.c)
-endif ()
+
+include(platform/rpi/CMakeLists.txt)
 
 
-add_executable(uds-server
-        platform/test/main.c
-        platform/test/platform-input.c
-        platform/test/platform-output.c
-        platform/test/platform-time.c
-        platform/test/platform-storage.c
-        ${SOURCES_COMMON}
-        ${SOURCES_STORAGE}
+add_executable(uds-server-test
+        ${COMMON_SOURCES}
+        ${STORAGE_SOURCES}
+        ${PLATFORM_SOURCES}
         ${DASHBOARD_LIB_SOURCES}
         ${DIAGNOSTIC_IMPL_SOURCES}
         )
 
-target_compile_definitions(uds-server PRIVATE
-#        DIAG_STORAGE_ASYNC
-        STORAGE_TRACE
-        EXTERNAL_ISOTP
-        PROTOCOL_DEBUG
-        UDS_DEBUG
-        STORAGE_CANBUS_ACCESS
-        PROJECT_NAME="${CMAKE_PROJECT_NAME}"
+target_compile_definitions(uds-server-test PRIVATE
+        ${PLATFORM_CONFIGURATION}
         )
 
-target_include_directories(uds-server PRIVATE
+target_include_directories(uds-server-test PRIVATE
         include
         ${DASHBOARD_LIB_INCLUDES}
         ${DIAGNOSTIC_IMPL_INCLUDES}
@@ -63,8 +46,8 @@ target_include_directories(uds-server PRIVATE
 #        )
 
 add_custom_command(
-        TARGET uds-server
+        TARGET uds-server-test
         POST_BUILD
         COMMAND $<$<CONFIG:release>:${CMAKE_STRIP}>
-        ARGS --strip-all $<TARGET_FILE:uds-server>
+        ARGS --strip-all $<TARGET_FILE:uds-server-test>
 )
