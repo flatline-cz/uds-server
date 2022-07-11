@@ -3,11 +3,11 @@
 #ifndef UDS_SERVER_COMMON_RESPONSES_H
 #define UDS_SERVER_COMMON_RESPONSES_H
 
-#include <protocol.h>
+#include <stdint.h>
 
-void uds_send_SNS(tUDSRecord* request);
-void uds_send_ROOR(tUDSRecord* request);
-void uds_send_IMLOIF(tUDSRecord* request);
-void uds_send_RTL(tUDSRecord* request);
+void uds_send_SNS(const uint8_t* request);
+void uds_send_ROOR(const uint8_t* request);
+void uds_send_IMLOIF(const uint8_t* request);
+void uds_send_RTL(const uint8_t* request);
 
 #endif //UDS_SERVER_COMMON_RESPONSES_H

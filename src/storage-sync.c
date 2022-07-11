@@ -2,8 +2,9 @@
 // Created by tumap on 7/7/22.
 //
 #include <memory.h>
-#include "storage.h"
-#include "storage-sync-platform.h"
+#include "platform.h"
+#include "framework.h"
+#include "implementation.h"
 
 #ifdef DIAG_STORAGE_ASYNC
 #error "Synchronous implementation, async requested"

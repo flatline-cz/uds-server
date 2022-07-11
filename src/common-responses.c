@@ -1,22 +1,8 @@
 // Copyright
 
 #include "common-responses.h"
-#include "interface/tester-outbound.h"
-
-#ifdef UDS_THREADED
-#include <pthread.h>
-#endif
-
-static tUDSRecord response;
-
-#ifdef UDS_THREADED
-static void* response_lock;
-#define LOCK
-#define UNLOCK
-#else
-#define LOCK
-#define UNLOCK
-#endif
+#include "framework.h"
+#include "platform.h"
 
 #define EXCEPTION_SNS           0x11
 #define EXCEPTION_SFNS          0x12
@@ -27,34 +13,31 @@ static void* response_lock;
 #define EXCEPTION_ROOR          0x31
 #define EXCEPTION_GPE           0x72
 
-static inline void send(tUDSRecord *request, uint8_t exception) {
-    LOCK;
-    response.data[0] = 0x7f;
-    response.data[1] = request->data[0];
-    response.data[2] = exception;
-    response.length = 3;
-    response.channel = request->channel;
-    uds_server_send_response(&response);
-    UNLOCK;
+static inline void send(const uint8_t *request, uint8_t exception) {
+    static uint8_t data[3];
+    data[0]=0x7f;
+    data[1]=request[0];
+    data[2]=exception;
+    uds_server_send_response(data, 3);
 }
 
-void uds_send_SNS(tUDSRecord *request) {
+void uds_send_SNS(const uint8_t *request) {
     send(request, EXCEPTION_SNS);
 }
 
-void uds_send_SFNS(tUDSRecord *request) {
+void uds_send_SFNS(const uint8_t *request) {
     send(request, EXCEPTION_SFNS);
 }
 
-void uds_send_IMLOIF(tUDSRecord *request) {
+void uds_send_IMLOIF(const uint8_t *request) {
     send(request, EXCEPTION_IMLOIF);
 }
 
-void uds_send_RTL(tUDSRecord *request) {
+void uds_send_RTL(const uint8_t *request) {
     send(request, EXCEPTION_RTL);
 }
 
-void uds_send_ROOR(tUDSRecord *request) {
+void uds_send_ROOR(const uint8_t *request) {
     send(request, EXCEPTION_ROOR);
 }
 

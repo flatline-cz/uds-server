@@ -6,7 +6,7 @@
 #define UDS_SERVER_PLATFORM_TIMER_H
 
 #include <stdbool.h>
-#include "uds-server.h"
+#include "platform.h"
 
 void platform_timer_init();
 

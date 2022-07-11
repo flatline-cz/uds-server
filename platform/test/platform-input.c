@@ -4,8 +4,8 @@
 #include <unistd.h>
 #include "protocol.h"
 #include "log.h"
-#include "platform.h"
-#include "uds-server.h"
+#include "platform-input-output.h"
+#include "framework.h"
 
 
 static tCommand request_command;

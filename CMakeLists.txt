@@ -11,6 +11,8 @@ include(impl/CMakeLists.txt)
 
 set(SOURCES_COMMON
         src/uds-server.c
+        src/common-responses.c
+        src/uds-processor.c
         src/storage-sync.c
         )
 
@@ -28,10 +30,11 @@ endif ()
 
 
 add_executable(uds-server
-        test/main.c
-        test/platform-input.c
-        test/platform-output.c
-        test/platform-time.c
+        platform/test/main.c
+        platform/test/platform-input.c
+        platform/test/platform-output.c
+        platform/test/platform-time.c
+        platform/test/platform-storage.c
         ${SOURCES_COMMON}
         ${SOURCES_STORAGE}
         ${DASHBOARD_LIB_SOURCES}
@@ -41,8 +44,9 @@ add_executable(uds-server
 target_compile_definitions(uds-server PRIVATE
 #        DIAG_STORAGE_ASYNC
         STORAGE_TRACE
-#        EXTERNAL_ISOTP
+        EXTERNAL_ISOTP
         PROTOCOL_DEBUG
+        UDS_DEBUG
         STORAGE_CANBUS_ACCESS
         PROJECT_NAME="${CMAKE_PROJECT_NAME}"
         )

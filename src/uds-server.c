@@ -4,14 +4,14 @@
 #ifdef STORAGE_TRACE
 #include <stdio.h>
 #endif
-#include "uds-server.h"
-#include "ecu.h"
-#include "uds.h"
+#include "framework.h"
+#include "platform.h"
 #include "log.h"
 #ifndef EXTERNAL_ISOTP
 #include "iso-tp.h"
 #endif
 
+bool uds_server_idle();
 
 #ifndef EXTERNAL_ISOTP
 #define ISOTP_MAX_MESSAGE_LENGTH        1024
@@ -23,6 +23,7 @@ eDiagStatus diag_uds_get_field_common(unsigned field_id, uint8_t * buffer, unsig
     return UNKNOWN_FIELD;
 }
 
+#ifdef DIAG_STORAGE_ASYNC
 void diag_uds_send_response_string(uint32_t field_id, unsigned length, const uint8_t* const data) {
 
 }
@@ -30,15 +31,17 @@ void diag_uds_send_response_string(uint32_t field_id, unsigned length, const uin
 void diag_uds_send_response_number(uint32_t field_id, uint32_t value, unsigned bytes) {
 
 }
+#endif
 
 void diag_ecu_update_field(uint16_t fieldId, uint32_t value) {
 
 }
 
-void uds_server_request_received(const uint8_t* data, unsigned length) {
-    LOG_INFO("UDSServer: Request received (%d bytes)", length);
-
+#ifndef EXTERNAL_ISOTP
+void uds_server_send_response(const uint8_t* data, unsigned length) {
+    isotp_send_data(&isotp_context, data, length);
 }
+#endif
 
 
 void uds_server_init() {
@@ -58,9 +61,21 @@ void uds_server_init() {
     isotp_context.rx_id_single_enabled=true;
     isotp_context.rx_id=0x7e0;
     isotp_context.tx_id_extended=false;
+    isotp_context.tx_timeout=100;
     isotp_init_context(&isotp_context);
 #endif
 
+}
+
+bool uds_server_handle() {
+    bool didSomething=false;
+#ifndef EXTERNAL_ISOTP
+    didSomething|= isotp_handle(&isotp_context);
+#endif
+
+    didSomething|=uds_server_idle();
+
+    return didSomething;
 }
 
 void uds_server_message_received(const tCANMessage* msg) {

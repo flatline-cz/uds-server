@@ -5,7 +5,8 @@
 #include "platform-serial.h"
 //#include "platform-storage.h"
 #include "platform-canbus.h"
-#include "uds-server.h"
+#include "framework.h"
+#include "platform.h"
 
 
 int main() {
@@ -37,6 +38,7 @@ int main() {
 //        platform_storage_handle();
         
         // UDS server handling
+        uds_server_handle();
         
     }
     
