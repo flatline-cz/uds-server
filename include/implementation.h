@@ -15,7 +15,7 @@ eDiagStatus diag_uds_get_field(unsigned field_id, uint8_t *buffer, unsigned *pos
 eDiagStatus diag_uds_update_field(unsigned field_id, const uint8_t *buffer, unsigned* length);
 
 // implemented by IMPLEMENTATION
-eDiagStatus dsg_io_control(unsigned field_id, bool override, const uint8_t *buffer, unsigned* length);
+eDiagStatus diag_io_control(unsigned field_id, bool override, const uint8_t *buffer, unsigned* length);
 
 // implemented by IMPLEMENTATION
 void diag_ecu_message_received(const tCANMessage* msg);

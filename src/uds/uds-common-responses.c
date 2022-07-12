@@ -25,6 +25,18 @@ void uds_send_SNS(const uint8_t *request) {
     send(request, EXCEPTION_SNS);
 }
 
+void uds_send_CNC(const uint8_t *request) {
+    send(request, EXCEPTION_CNC);
+}
+
+void uds_send_RSE(const uint8_t *request) {
+    send(request, EXCEPTION_RSE);
+}
+
+void uds_send_GPE(const uint8_t *request) {
+    send(request, EXCEPTION_GPE);
+}
+
 void uds_send_SFNS(const uint8_t *request) {
     send(request, EXCEPTION_SFNS);
 }

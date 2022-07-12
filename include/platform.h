@@ -13,10 +13,6 @@
 tTime uds_server_get_time();
 
 
-// implemented by PLATFORM
-void uds_server_send_message(const tCANMessage* msg);
-
-
 #ifndef DIAG_STORAGE_ASYNC
 
 #ifndef STORAGE_SIZE

@@ -6,6 +6,9 @@
 #include <stdint.h>
 
 void uds_send_SNS(const uint8_t* request);
+void uds_send_CNC(const uint8_t* request);
+void uds_send_RSE(const uint8_t* request);
+void uds_send_GPE(const uint8_t* request);
 void uds_send_ROOR(const uint8_t* request);
 void uds_send_IMLOIF(const uint8_t* request);
 void uds_send_RTL(const uint8_t* request);
