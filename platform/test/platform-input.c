@@ -40,6 +40,15 @@ static void read_processor(uint8_t *cmd, unsigned length) {
         return;
     }
 
+    if(request_command.type==CMD_TYPE_STORAGE_DATA) {
+        uds_server_storage_response(
+                request_command.storageData.sequence_id,
+                request_command.storageData.data,
+                request_command.storageData.length
+                );
+        return;
+    }
+
 }
 
 static tReadBuffer read_buffer;

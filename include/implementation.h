@@ -35,4 +35,6 @@ extern const unsigned diag_storage_config_count;
 extern const tCANMessageId diag_bridge_message_list[];
 #endif
 
+extern const tFieldDescriptor  diag_field_descriptor_list[];
+
 #endif //UDS_SERVER_IMPLEMENTATION_H

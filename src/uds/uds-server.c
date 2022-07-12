@@ -2,15 +2,13 @@
 // Created by tumap on 7/4/22.
 //
 #ifdef STORAGE_TRACE
-
 #include <stdio.h>
-
 #endif
-
 #include "framework.h"
 #include "implementation.h"
 #include "platform.h"
 #include "log.h"
+#include "../fieldset/uds-fieldset.h"
 
 #ifndef EXTERNAL_ISOTP
 #include "iso-tp.h"
@@ -26,9 +24,6 @@ static tISOTPContext isotp_context;
 static uint8_t isotp_rx_buffer[ISOTP_MAX_MESSAGE_LENGTH];
 #endif
 
-eDiagStatus diag_uds_get_field_common(unsigned field_id, uint8_t *buffer, unsigned *position, unsigned max_length) {
-    return UNKNOWN_FIELD;
-}
 
 #ifdef DIAG_STORAGE_ASYNC
 void diag_uds_send_response_string(uint32_t field_id, unsigned length, const uint8_t* const data) {
@@ -40,9 +35,6 @@ void diag_uds_send_response_number(uint32_t field_id, uint32_t value, unsigned b
 }
 #endif
 
-void diag_ecu_update_field(uint16_t fieldId, uint32_t value) {
-
-}
 
 #ifndef EXTERNAL_ISOTP
 void uds_server_send_response(const uint8_t* data, unsigned length) {
@@ -71,6 +63,9 @@ void uds_server_init() {
     isotp_context.tx_timeout=100;
     isotp_init_context(&isotp_context);
 #endif
+
+    // initialize field set
+    uds_fieldset_init();
 
 }
 
@@ -113,9 +108,8 @@ void uds_server_message_received(const tCANMessage *msg) {
     process_bridge_message(msg);
 #endif
 
-
     // pass to implementation
-//    diag_ecu_message_received(msg);
+    diag_ecu_message_received(msg);
 }
 
 

@@ -33,7 +33,6 @@ bool can_bus_send_message(const tCANMessage* msg) {
 #ifdef EXTERNAL_ISOTP
 void uds_server_send_response(const uint8_t* data, unsigned length) {
     response_command.type=CMD_TYPE_UDS;
-    response_command.udsRecord.channel=UDS_CHANNEL_OBD;
     response_command.udsRecord.length=length;
     memcpy(response_command.udsRecord.data, data, length);
     protocol_write(&response_command, &write_buffer);

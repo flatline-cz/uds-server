@@ -9,21 +9,20 @@ include(common/CMakeLists.txt)
 include(impl/CMakeLists.txt)
 
 
-set(COMMON_SOURCES
-        src/uds/uds-server.c
-        src/uds/uds-common-responses.c
-        src/uds/uds-processor.c
+set(UDS_SERVER_SOURCES
         )
 
 set(STORAGE_SOURCES
         )
 
+include(src/CMakeLists.txt)
 
-include(platform/rpi/CMakeLists.txt)
+
+include(platform/test/CMakeLists.txt)
 
 
 add_executable(uds-server-test
-        ${COMMON_SOURCES}
+        ${UDS_SERVER_SOURCES}
         ${STORAGE_SOURCES}
         ${PLATFORM_SOURCES}
         ${DASHBOARD_LIB_SOURCES}

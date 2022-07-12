@@ -46,5 +46,25 @@ struct tCANMessageId {
 typedef struct tCANMessageId tCANMessageId;
 #endif
 
+struct tServerContext {
+    // time moment cache
+    tTime now;
+
+    // current session
+    bool session_active;
+    tTime session_started;
+    tTime session_last_activity;
+};
+typedef struct tServerContext tServerContext;
+
+struct tFieldDescriptor {
+    uint16_t field_id;
+    bool special;
+    unsigned bits;
+    bool has_timeout;
+    uint16_t timeout;
+};
+typedef struct tFieldDescriptor tFieldDescriptor;
+
 
 #endif //UDS_SERVER_TYPES_H

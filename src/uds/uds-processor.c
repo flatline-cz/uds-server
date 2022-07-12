@@ -5,6 +5,7 @@
 #include "framework.h"
 #include "implementation.h"
 #include "log.h"
+#include "../fieldset/uds-fieldset.h"
 
 /**
  * Service declarations (code & handler)
@@ -23,16 +24,8 @@ static void handler_read_by_id(const uint8_t *data, unsigned length);
 #define UDS_SID_READ_DTC                        0x19
 #endif
 
-typedef struct {
-    // time moment cache
-    tTime now;
 
-    // current session
-    bool session_active;
-    tTime session_started;
-    tTime session_last_activity;
-} tServerContext;
-static tServerContext serverContext;
+tServerContext serverContext;
 
 
 void uds_server_reset() {
@@ -40,6 +33,10 @@ void uds_server_reset() {
     serverContext.session_active = false;
     serverContext.session_started = 0;
     serverContext.session_last_activity = 0;
+
+    // reset field set
+    uds_fieldset_reset();
+
 }
 
 void uds_server_request_received(const uint8_t* data, unsigned length) {
@@ -157,34 +154,32 @@ static void handler_read_by_id(const uint8_t* data, unsigned length) {
     int postponed = 0;
     for (i = 1; i < length; i += 2) {
         int res;
-        unsigned bits;
+        unsigned bytes=0;
         if (MAX_READ_DATA_RESPONSE_LENGTH - position < 3) {
             uds_send_RTL(data);
             return;
         }
         response[position] = data[i];
         response[position + 1] = data[i + 1];
-        bits=0; // FIXME
-//        fieldset_get_value(
-//                (int) ((((unsigned) request->data[i]) << 8) | request->data[i + 1]),
-//                &res,
-//                response.data + position + 2,
-//                UDS_MAX_RECORD_LENGTH - position - 2,
-//                &bits,
-//                serverContext.now);
-//        switch (res) {
-//            case FIELDSET_SMALL_BUFFER:
-//                uds_send_RTL(request);
-//                return;
-//            case FIELDSET_QUERIED:
-//                postponed = 1;
-//                continue;
-//            case FIELDSET_OK:
-//                break;
-//            default:
-//                continue;
-//        }
-        position += 2 + ((bits + 7) >> 3);
+        eDiagStatus status= diag_uds_get_field(
+                (int) ((((unsigned) data[i]) << 8) | data[i + 1]),
+                response+position+2,
+                &bytes,
+                MAX_READ_DATA_RESPONSE_LENGTH-position-2);
+        switch(status) {
+            case OUT_OF_SPACE:
+                uds_send_RTL(data);
+                return;
+            case QUERIED:
+                postponed=true;
+                continue;
+            case OK:
+                break;
+            default:
+                uds_send_ROOR(data);
+                return;
+        }
+        position += 2 + bytes;
     }
 
     // nothing found?
