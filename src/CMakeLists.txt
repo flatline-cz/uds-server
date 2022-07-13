@@ -6,3 +6,7 @@ list(APPEND UDS_SERVER_SOURCES
         ${CMAKE_CURRENT_LIST_DIR}/uds/uds-processor.c
         ${CMAKE_CURRENT_LIST_DIR}/fieldset/uds-fieldset.c
         )
+
+list(APPEND UDS_SERVER_INCLUDES
+        ${CMAKE_CURRENT_LIST_DIR}/../include
+        )

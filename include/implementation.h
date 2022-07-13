@@ -36,5 +36,9 @@ extern const tCANMessageId diag_bridge_message_list[];
 #endif
 
 extern const tFieldDescriptor  diag_field_descriptor_list[];
+extern const tStorageProperty  diag_storage_field_descriptor_list[];
+
+extern const unsigned diag_hex_config_size;
+extern const uint32_t diag_hex_config[];
 
 #endif //UDS_SERVER_IMPLEMENTATION_H

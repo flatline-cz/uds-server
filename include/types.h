@@ -66,5 +66,11 @@ struct tFieldDescriptor {
 };
 typedef struct tFieldDescriptor tFieldDescriptor;
 
+struct tStorageProperty {
+    const char *name;
+    unsigned id;
+};
+typedef struct tStorageProperty tStorageProperty;
+
 
 #endif //UDS_SERVER_TYPES_H

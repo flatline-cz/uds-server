@@ -4,6 +4,8 @@
 #ifdef STORAGE_TRACE
 #include <stdio.h>
 #endif
+
+#include <string.h>
 #include "framework.h"
 #include "implementation.h"
 #include "platform.h"
@@ -27,11 +29,25 @@ static uint8_t isotp_rx_buffer[ISOTP_MAX_MESSAGE_LENGTH];
 
 #ifdef DIAG_STORAGE_ASYNC
 void diag_uds_send_response_string(uint32_t field_id, unsigned length, const uint8_t* const data) {
-
+    static uint8_t response[64];
+    response[0]=0x62;
+    response[1]=field_id>>8;
+    response[2]=field_id&0xff;
+    memcpy(response+3, data, length);
+    uds_server_send_response(response, length+3);
 }
 
 void diag_uds_send_response_number(uint32_t field_id, uint32_t value, unsigned bytes) {
-
+    static uint8_t response[7];
+    response[0]=0x62;
+    response[1]=field_id>>8;
+    response[2]=field_id&0xff;
+    unsigned length=3+bytes;
+    while (bytes >= 0) {
+        response[3+bytes--] = value & 0xff;
+        value >>= 8;
+    }
+    uds_server_send_response(response, length);
 }
 #endif
 

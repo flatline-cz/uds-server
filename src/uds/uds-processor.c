@@ -49,7 +49,9 @@ void uds_server_reset() {
 }
 
 void uds_server_request_received(const uint8_t *data, unsigned length) {
+#ifdef BUFFER_DEBUG
     LOG_INFO("UDSServer: Request received (%d bytes)", length);
+#endif
 
     // update cache
     serverContext.now = uds_server_get_time();
@@ -147,7 +149,9 @@ static void handler_tester_present(const uint8_t *data, unsigned length) {
 }
 
 static void handler_read_by_id(const uint8_t *data, unsigned length) {
-
+#ifdef UDS_DEBUG
+    LOG_INFO("==== READ DATA BY ID ====");
+#endif
     // verify message length
     if (length < 3 || ((length - 1) % 2) != 0) {
         // SEND IMLOIF
@@ -212,6 +216,9 @@ static void handler_read_by_id(const uint8_t *data, unsigned length) {
 
 
 static void handler_write_by_id(const uint8_t *data, unsigned length) {
+#ifdef UDS_DEBUG
+    LOG_INFO("==== WRITE DATA BY ID ====");
+#endif
     // verify message length
     if (length < 4) {
         // SEND IMLOIF
@@ -250,6 +257,9 @@ static void handler_write_by_id(const uint8_t *data, unsigned length) {
 }
 
 static void handler_control_by_id(const uint8_t *data, unsigned length) {
+#ifdef UDS_DEBUG
+    LOG_INFO("==== I/O CONTROL BY ID ====");
+#endif
     // verify message length
     if (length < 4) {
         // SEND IMLOIF
